@@ -1,15 +1,29 @@
+.typing-bubble {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(10px);
+    padding: 16px 20px;
+    border-radius: 20px;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
 .typing-indicator {
     display: flex;
-    gap: 4px;
-    padding: 12px 16px;
+    gap: 5px;
+    padding: 4px;
 }
 
 .typing-dot {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    background: #999;
-    animation: typing 1.4s infinite;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    animation: typingAnimation 1.4s infinite;
+}
+
+.typing-dot:nth-child(1) {
+    animation-delay: 0s;
 }
 
 .typing-dot:nth-child(2) {
@@ -20,13 +34,13 @@
     animation-delay: 0.4s;
 }
 
-@keyframes typing {
+@keyframes typingAnimation {
     0%, 60%, 100% {
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
         opacity: 0.7;
     }
     30% {
-        transform: translateY(-10px);
+        transform: translateY(-15px) scale(1.2);
         opacity: 1;
     }
 }

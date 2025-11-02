@@ -2,10 +2,11 @@ import React, { useState, useRef } from 'react';
 import ChatHeader from './components/ChatHeader.jsx';
 import ChatMessages from './components/ChatMessages.jsx';
 import ChatInput from './components/ChatInput.jsx';
-import PreferencesPanel from './components/PreferencesPanel.jsx'
+import PreferencesPanel from './components/PreferencesPanel.jsx';
+import ContentSidebar from './components/ContentSidebar.jsx';
 import './App.css';
 
-const API_URL = process.env.API_URL;
+const API_URL = "https://adaptaedu-api.vercel.app";
 
 function App() {
     const [conversationId, setConversationId] = useState(null);
@@ -13,6 +14,8 @@ function App() {
     const [isLoading, setIsLoading] = useState(false);
     const [isPrefOpen, setIsPrefOpen] = useState(false);
     const [isWaitingForClarification, setIsWaitingForClarification] = useState(false);
+    const [sidebarContent, setSidebarContent] = useState(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const handleSendMessage = async (message) => {
         setMessages(prev => [...prev, { role: 'user', content: message }]);
@@ -58,6 +61,13 @@ function App() {
         setConversationId(null);
         setMessages([]);
         setIsWaitingForClarification(false);
+        setIsSidebarOpen(false);
+        setSidebarContent(null);
+    };
+
+    const handleOpenContent = (content) => {
+        setSidebarContent(content);
+        setIsSidebarOpen(true);
     };
 
     const handleSavePreferences = async (preferences) => {
@@ -90,26 +100,35 @@ function App() {
     return (
         <div className="app-container">
             <ChatHeader onNewChat={handleNewChat} />
-            <ChatMessages 
-                messages={messages} 
-                isLoading={isLoading}
-                onSelectOption={handleSendMessage}
-            />
+            <div className="chat-content">
+                <ChatMessages 
+                    messages={messages} 
+                    isLoading={isLoading}
+                    onSelectOption={handleSendMessage}
+                    onOpenContent={handleOpenContent}
+                />
+                <ContentSidebar 
+                    isOpen={isSidebarOpen}
+                    content={sidebarContent}
+                    onClose={() => setIsSidebarOpen(false)}
+                />
+            </div>
             <ChatInput 
                 onSendMessage={handleSendMessage}
                 disabled={isLoading}
             />
+            {/* <button 
+                className="btn-preferences"
+                onClick={() => setIsPrefOpen(!isPrefOpen)}
+                title="Preferências"
+            >
+                ⚙️
+            </button> */}
             <PreferencesPanel 
                 isOpen={isPrefOpen}
                 onClose={() => setIsPrefOpen(false)}
                 onSave={handleSavePreferences}
             />
-            <button 
-                className="btn-toggle"
-                onClick={() => setIsPrefOpen(!isPrefOpen)}
-            >
-                ⚙️
-            </button>
         </div>
     );
 }
