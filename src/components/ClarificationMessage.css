@@ -1,0 +1,33 @@
+.clarification {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 16px;
+    border-radius: 8px;
+    margin-top: 8px;
+}
+
+.clarification-title {
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #856404;
+}
+
+.clarification-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.clarification-option {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+}
+
+.clarification-option:hover {
+    border-color: #ffc107;
+    transform: translateX(4px);
+}
