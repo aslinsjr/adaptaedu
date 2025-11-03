@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import ChatHeader from './components/ChatHeader.jsx';
 import ChatMessages from './components/ChatMessages.jsx';
 import ChatInput from './components/ChatInput.jsx';
 import PreferencesPanel from './components/PreferencesPanel.jsx';
