@@ -6,8 +6,7 @@ import PreferencesPanel from './components/PreferencesPanel.jsx';
 import ContentSidebar from './components/ContentSidebar.jsx';
 import './App.css';
 
-const API_URL = 'https://adaptaedu-qfixyy5jj-aslinsjrs-projects.vercel.app/api'
-
+const API_URL = process.env.API_URL
 function App() {
     const [conversationId, setConversationId] = useState(null);
     const [messages, setMessages] = useState([]);
