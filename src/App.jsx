@@ -1,133 +1,26 @@
-import React, { useState, useRef } from 'react';
-import ChatHeader from './components/ChatHeader.jsx';
-import ChatMessages from './components/ChatMessages.jsx';
-import ChatInput from './components/ChatInput.jsx';
-import PreferencesPanel from './components/PreferencesPanel.jsx';
-import ContentSidebar from './components/ContentSidebar.jsx';
+import React, { useState } from 'react';
+import Home from './Home.jsx';
+import Chat from './Chat.jsx';
 import './App.css';
 
-const API_URL = 'https://adaptaedu-api.vercel.app/api'
 function App() {
-    const [conversationId, setConversationId] = useState(null);
-    const [messages, setMessages] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isPrefOpen, setIsPrefOpen] = useState(false);
-    const [isWaitingForClarification, setIsWaitingForClarification] = useState(false);
-    const [sidebarContent, setSidebarContent] = useState(null);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState('home');
 
-    const handleSendMessage = async (message) => {
-        setMessages(prev => [...prev, { role: 'user', content: message }]);
-        setIsLoading(true);
-
-        try {
-            const response = await fetch(`${API_URL}/chat`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    mensagem: message,
-                    conversationId: conversationId
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.conversationId) {
-                setConversationId(data.conversationId);
-            }
-
-            setMessages(prev => [...prev, { role: 'assistant', data }]);
-            
-            if (data.tipo === 'clarificacao') {
-                setIsWaitingForClarification(true);
-            } else {
-                setIsWaitingForClarification(false);
-            }
-        } catch (error) {
-            console.error('Erro ao enviar mensagem:', error);
-            setMessages(prev => [...prev, { 
-                role: 'assistant', 
-                content: 'Erro ao se comunicar com o servidor.' 
-            }]);
-        } finally {
-            setIsLoading(false);
-        }
+    const handleStartChat = () => {
+        setCurrentPage('chat');
     };
 
-    const handleNewChat = () => {
-        setConversationId(null);
-        setMessages([]);
-        setIsWaitingForClarification(false);
-        setIsSidebarOpen(false);
-        setSidebarContent(null);
-    };
-
-    const handleOpenContent = (content) => {
-        setSidebarContent(content);
-        setIsSidebarOpen(true);
-    };
-
-    const handleSavePreferences = async (preferences) => {
-        if (!conversationId) {
-            alert('Inicie uma conversa primeiro');
-            return;
-        }
-
-        try {
-            const response = await fetch(`${API_URL}/conversas/${conversationId}/preferencias`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ preferencias: preferences })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                alert('Preferências salvas!');
-                setIsPrefOpen(false);
-            }
-        } catch (error) {
-            console.error('Erro ao salvar preferências:', error);
-            alert('Erro ao salvar preferências');
-        }
+    const handleBackToHome = () => {
+        setCurrentPage('home');
     };
 
     return (
         <div className="app-container">
-            <ChatHeader onNewChat={handleNewChat} />
-            <div className="chat-content">
-                <ChatMessages 
-                    messages={messages} 
-                    isLoading={isLoading}
-                    onSelectOption={handleSendMessage}
-                    onOpenContent={handleOpenContent}
-                />
-                <ContentSidebar 
-                    isOpen={isSidebarOpen}
-                    content={sidebarContent}
-                    onClose={() => setIsSidebarOpen(false)}
-                />
-            </div>
-            <ChatInput 
-                onSendMessage={handleSendMessage}
-                disabled={isLoading}
-            />
-            {/* <button 
-                className="btn-preferences"
-                onClick={() => setIsPrefOpen(!isPrefOpen)}
-                title="Preferências"
-            >
-                ⚙️
-            </button> */}
-            <PreferencesPanel 
-                isOpen={isPrefOpen}
-                onClose={() => setIsPrefOpen(false)}
-                onSave={handleSavePreferences}
-            />
+            {currentPage === 'home' ? (
+                <Home onStartChat={handleStartChat} />
+            ) : (
+                <Chat onBackToHome={handleBackToHome} />
+            )}
         </div>
     );
 }

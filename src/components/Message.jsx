@@ -1,3 +1,4 @@
+// Message.jsx
 import React from 'react';
 import './Message.css';
 
@@ -15,7 +16,8 @@ function Message({ role, content, sources, onOpenContent }) {
             onOpenContent({
                 tipo: source.tipo || 'texto',
                 nome: source.nome,
-                conteudo: source.conteudo || source.url || 'Conteúdo não disponível'
+                conteudo: source.conteudo,
+                url: source.url
             });
         }
     };
@@ -48,7 +50,8 @@ function Message({ role, content, sources, onOpenContent }) {
                                     title={`Clique para abrir: ${doc.nome}`}
                                 >
                                     <span className="source-icon">
-                                        {doc.tipo === 'video' ? '🎥' :
+                                        {doc.tipo === 'pdf' ? '📄' :
+                                         doc.tipo === 'video' ? '🎥' :
                                          doc.tipo === 'imagem' ? '🖼️' :
                                          doc.tipo === 'audio' ? '🎵' : '📄'}
                                     </span>

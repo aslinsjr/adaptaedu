@@ -1,3 +1,4 @@
+// ContentSidebar.jsx
 import React from 'react';
 import './ContentSidebar.css';
 
@@ -6,11 +7,23 @@ function ContentSidebar({ isOpen, content, onClose }) {
 
     const renderContent = () => {
         switch (content.tipo) {
+            case 'pdf':
+                return (
+                    <div className="content-pdf">
+                        <iframe
+                            src={content.conteudo || content.url}
+                            width="100%"
+                            height="100%"
+                            style={{ border: 'none', borderRadius: 'var(--radius-md)' }}
+                            title={content.nome}
+                        />
+                    </div>
+                );
             case 'video':
                 return (
                     <div className="content-video">
                         <video controls width="100%">
-                            <source src={content.conteudo} type="video/mp4" />
+                            <source src={content.conteudo || content.url} type="video/mp4" />
                             Seu navegador não suporta vídeos.
                         </video>
                     </div>
@@ -18,14 +31,14 @@ function ContentSidebar({ isOpen, content, onClose }) {
             case 'imagem':
                 return (
                     <div className="content-image">
-                        <img src={content.conteudo} alt={content.nome} />
+                        <img src={content.conteudo || content.url} alt={content.nome} />
                     </div>
                 );
             case 'audio':
                 return (
                     <div className="content-audio">
                         <audio controls style={{ width: '100%' }}>
-                            <source src={content.conteudo} type="audio/mpeg" />
+                            <source src={content.conteudo || content.url} type="audio/mpeg" />
                             Seu navegador não suporta áudio.
                         </audio>
                     </div>
@@ -49,7 +62,8 @@ function ContentSidebar({ isOpen, content, onClose }) {
                 <div className="sidebar-header">
                     <div className="sidebar-title">
                         <span className="sidebar-icon">
-                            {content.tipo === 'video' ? '🎥' :
+                            {content.tipo === 'pdf' ? '📄' :
+                             content.tipo === 'video' ? '🎥' :
                              content.tipo === 'imagem' ? '🖼️' :
                              content.tipo === 'audio' ? '🎵' : '📄'}
                         </span>

@@ -1,10 +1,11 @@
+// ChatMessages.jsx
 import React, { useEffect, useRef } from 'react';
 import Message from './Message.jsx';
 import ClarificationMessage from './ClarificationMessage.jsx';
 import TypingIndicator from './TypingIndicator.jsx';
 import './ChatMessages.css';
 
-function ChatMessages({ messages, isLoading, onSelectOption }) {
+function ChatMessages({ messages, isLoading, onSelectOption, onOpenContent }) {
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -35,6 +36,7 @@ function ChatMessages({ messages, isLoading, onSelectOption }) {
                             role="assistant" 
                             content={message.data?.resposta || message.content}
                             sources={message.data?.documentos_usados}
+                            onOpenContent={onOpenContent}
                         />
                     );
                 }

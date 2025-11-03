@@ -1,29 +1,30 @@
 .chat-input-container {
-    padding: 20px;
-    background: rgba(255,255,255,0.98);
-    border-top: 1px solid rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
+    width: 100%;
+    /* background: var(--bg-primary);
+    border-top: 1px solid var(--border-primary); */
+    transition: all var(--transition-normal);
+    margin-top: 1rem;
 }
 
 .chat-input-container.focused {
-    box-shadow: 0 -10px 30px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 -10px 30px var(--alpha-10);
 }
 
 .input-wrapper {
     display: flex;
     align-items: flex-end;
     gap: 12px;
-    background: rgba(248, 249, 255, 0.8);
-    border: 2px solid #e9ecef;
-    border-radius: 16px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-secondary);
+    border-radius: var(--radius-lg);
     padding: 8px 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--transition-bounce);
 }
 
 .chat-input-container.focused .input-wrapper {
-    border-color: #667eea;
-    background: white;
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.1);
+    border-color: var(--border-focus);
+    background: var(--bg-tertiary);
+    box-shadow: 0 4px 16px var(--alpha-15);
 }
 
 .message-input {
@@ -34,7 +35,7 @@
     font-family: inherit;
     font-size: 15px;
     line-height: 1.5;
-    color: #2c3e50;
+    color: var(--text-primary);
     padding: 8px 4px;
     min-height: 36px;
     max-height: 120px;
@@ -46,7 +47,7 @@
 }
 
 .message-input::placeholder {
-    color: #a0aec0;
+    color: var(--text-tertiary);
 }
 
 .message-input:disabled {
@@ -59,7 +60,7 @@
 }
 
 .message-input::-webkit-scrollbar-thumb {
-    background: #cbd5e0;
+    background: var(--scrollbar-thumb);
     border-radius: 2px;
 }
 
@@ -73,7 +74,7 @@
 .btn-attach {
     width: 36px;
     height: 36px;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     background: transparent;
     border: none;
     cursor: pointer;
@@ -81,12 +82,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
+    color: var(--text-secondary);
 }
 
 .btn-attach:hover:not(:disabled) {
-    background: rgba(102, 126, 234, 0.1);
+    background: var(--alpha-10);
     transform: rotate(45deg);
+    color: var(--text-primary);
 }
 
 .btn-attach:disabled {
@@ -97,27 +100,27 @@
 .btn-send {
     width: 36px;
     height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, var(--accent-primary-start) 0%, var(--accent-primary-end) 100%);
     color: white;
     border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    transition: all var(--transition-bounce);
+    box-shadow: var(--shadow-accent);
 }
 
 .send-icon {
     font-size: 18px;
     font-weight: bold;
-    transition: transform 0.3s ease;
+    transition: transform var(--transition-normal);
 }
 
 .btn-send:hover:not(:disabled) {
     transform: scale(1.1);
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+    box-shadow: var(--shadow-accent-hover);
 }
 
 .btn-send:hover:not(:disabled) .send-icon {
@@ -131,24 +134,25 @@
 .btn-send:disabled {
     opacity: 0.4;
     cursor: not-allowed;
-    background: #cbd5e0;
+    background: var(--bg-tertiary);
     box-shadow: none;
 }
 
 .input-hint {
     margin-top: 8px;
     font-size: 12px;
-    color: #a0aec0;
+    color: var(--text-tertiary);
     text-align: center;
 }
 
 .input-hint kbd {
-    background: rgba(0,0,0,0.05);
+    background: var(--overlay-light);
     padding: 2px 6px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
     font-size: 11px;
-    color: #5a6c7d;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-secondary);
 }
 
 @media (max-width: 600px) {

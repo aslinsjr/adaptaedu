@@ -1,11 +1,11 @@
 .typing-bubble {
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(10px);
+    background: var(--surface-secondary);
+    backdrop-filter: var(--blur-sm);
     padding: 16px 20px;
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     border-bottom-left-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-secondary);
 }
 
 .typing-indicator {
@@ -17,8 +17,8 @@
 .typing-dot {
     width: 10px;
     height: 10px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, var(--accent-primary-start) 0%, var(--accent-primary-end) 100%);
     animation: typingAnimation 1.4s infinite;
 }
 
