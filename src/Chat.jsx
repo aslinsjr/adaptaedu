@@ -9,7 +9,15 @@ const API_URL = 'https://adaptaedu-api.vercel.app/api';
 
 function Chat({ onBackToHome }) {
     const [conversationId, setConversationId] = useState(null);
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState([
+        {
+            role: 'assistant',
+            data: {
+                resposta: `Olá! 👋 Sou o **Edu**, seu assistente educacional inteligente!\n\nEstou aqui para ajudar você a aprender de forma personalizada e interativa. Posso:\n\n💡 **Responder suas dúvidas** sobre diversos assuntos\n📚 **Fornecer materiais didáticos** relevantes\n🎯 **Adaptar as explicações** ao seu nível de conhecimento\n\nComo posso te ajudar hoje? Pode fazer qualquer pergunta ou me dizer sobre o que você gostaria de aprender!`,
+                tipo: 'resposta'
+            }
+        }
+    ]);
     const [isLoading, setIsLoading] = useState(false);
     const [isPrefOpen, setIsPrefOpen] = useState(false);
     const [isWaitingForClarification, setIsWaitingForClarification] = useState(false);
@@ -58,7 +66,15 @@ function Chat({ onBackToHome }) {
 
     const handleNewChat = () => {
         setConversationId(null);
-        setMessages([]);
+        setMessages([
+            {
+                role: 'assistant',
+                data: {
+                    resposta: `Olá! 👋 Sou o **Edu**, seu assistente educacional inteligente!\n\nEstou aqui para ajudar você a aprender de forma personalizada e interativa. Posso:\n\n💡 **Responder suas dúvidas** sobre diversos assuntos\n📚 **Fornecer materiais didáticos** relevantes\n🎯 **Adaptar as explicações** ao seu nível de conhecimento\n\nComo posso te ajudar hoje? Pode fazer qualquer pergunta ou me dizer sobre o que você gostaria de aprender!`,
+                    tipo: 'resposta'
+                }
+            }
+        ]);
         setIsWaitingForClarification(false);
         setIsSidebarOpen(false);
         setSidebarContent(null);
