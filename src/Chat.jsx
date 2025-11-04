@@ -55,6 +55,8 @@ function Chat({ onBackToHome }) {
 
             const data = await response.json();
 
+            console.log(data)
+
             if (data.conversationId) {
                 setConversationId(data.conversationId);
             }
