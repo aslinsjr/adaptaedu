@@ -6,10 +6,6 @@
     margin-top: 1rem;
 }
 
-.chat-input-container.focused {
-    box-shadow: 0 -10px 30px var(--alpha-10);
-}
-
 .input-wrapper {
     display: flex;
     align-items: flex-end;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ChatMessages from './components/ChatMessages.jsx';
 import ChatInput from './components/ChatInput.jsx';
 import PreferencesPanel from './components/PreferencesPanel.jsx';
@@ -7,22 +7,35 @@ import './Chat.css';
 
 const API_URL = 'https://adaptaedu-api.vercel.app/api';
 
+const GREETING_MESSAGE = {
+    role: 'assistant',
+    data: {
+        resposta: `Olá! 👋 Sou o **Edu**, seu assistente educacional inteligente!\n\nEstou aqui para ajudar você a aprender de forma personalizada e interativa. Posso:\n\n💡 **Responder suas dúvidas** sobre diversos assuntos\n📚 **Fornecer materiais didáticos** relevantes\n🎯 **Adaptar as explicações** ao seu nível de conhecimento\n\nComo posso te ajudar hoje? Pode fazer qualquer pergunta ou me dizer sobre o que você gostaria de aprender!`,
+        tipo: 'resposta'
+    }
+};
+
 function Chat({ onBackToHome }) {
     const [conversationId, setConversationId] = useState(null);
-    const [messages, setMessages] = useState([
-        {
-            role: 'assistant',
-            data: {
-                resposta: `Olá! 👋 Sou o **Edu**, seu assistente educacional inteligente!\n\nEstou aqui para ajudar você a aprender de forma personalizada e interativa. Posso:\n\n💡 **Responder suas dúvidas** sobre diversos assuntos\n📚 **Fornecer materiais didáticos** relevantes\n🎯 **Adaptar as explicações** ao seu nível de conhecimento\n\nComo posso te ajudar hoje? Pode fazer qualquer pergunta ou me dizer sobre o que você gostaria de aprender!`,
-                tipo: 'resposta'
-            }
-        }
-    ]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [messages, setMessages] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [isPrefOpen, setIsPrefOpen] = useState(false);
     const [isWaitingForClarification, setIsWaitingForClarification] = useState(false);
     const [sidebarContent, setSidebarContent] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [showGreeting, setShowGreeting] = useState(true);
+
+    useEffect(() => {
+        if (showGreeting) {
+            const timer = setTimeout(() => {
+                setMessages([GREETING_MESSAGE]);
+                setIsLoading(false);
+                setShowGreeting(false);
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [showGreeting]);
 
     const handleSendMessage = async (message) => {
         setMessages(prev => [...prev, { role: 'user', content: message }]);
@@ -66,18 +79,12 @@ function Chat({ onBackToHome }) {
 
     const handleNewChat = () => {
         setConversationId(null);
-        setMessages([
-            {
-                role: 'assistant',
-                data: {
-                    resposta: `Olá! 👋 Sou o **Edu**, seu assistente educacional inteligente!\n\nEstou aqui para ajudar você a aprender de forma personalizada e interativa. Posso:\n\n💡 **Responder suas dúvidas** sobre diversos assuntos\n📚 **Fornecer materiais didáticos** relevantes\n🎯 **Adaptar as explicações** ao seu nível de conhecimento\n\nComo posso te ajudar hoje? Pode fazer qualquer pergunta ou me dizer sobre o que você gostaria de aprender!`,
-                    tipo: 'resposta'
-                }
-            }
-        ]);
+        setMessages([]);
         setIsWaitingForClarification(false);
         setIsSidebarOpen(false);
         setSidebarContent(null);
+        setIsLoading(true);
+        setShowGreeting(true);
     };
 
     const handleOpenContent = (content) => {
@@ -113,7 +120,8 @@ function Chat({ onBackToHome }) {
     };
 
     return (
-        <div className="chat-container">
+        <>
+<div className="chat-container">
             <div className="chat-header">
 
                 <button className="btn-new-chat" onClick={onBackToHome}>
@@ -152,12 +160,15 @@ function Chat({ onBackToHome }) {
                 disabled={isLoading}
             />
 
-            <ContentSidebar
+            
+        </div>
+        <ContentSidebar
                 isOpen={isSidebarOpen}
                 content={sidebarContent}
                 onClose={() => setIsSidebarOpen(false)}
             />
-        </div>
+        </>
+        
     );
 }
 
