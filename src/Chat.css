@@ -7,6 +7,7 @@
     flex-direction: column;
     position: relative;
     animation: fadeIn 0.5s ease;
+    padding: 2rem;
 }
 
 .chat-header {
@@ -96,6 +97,10 @@
 }
 
 @media (max-width: 768px) {
+    .chat-container {
+        padding: 1rem;
+    }
+
     .btn-back-home {
         top: 10px;
         left: 10px;
@@ -104,6 +109,6 @@
     }
 
     .chat-wrapper {
-        height: 70dvh;
+        height: 75dvh;
     }
 }
