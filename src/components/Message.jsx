@@ -1,8 +1,48 @@
 // Message.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Message.css';
 
-function Message({ role, content, sources, onOpenContent }) {
+// Hook para efeito de digitação
+const useTypingEffect = (text, speed = 30) => {
+    const [displayedText, setDisplayedText] = useState('');
+    const [isComplete, setIsComplete] = useState(false);
+
+    useEffect(() => {
+        if (!text) {
+            setDisplayedText('');
+            setIsComplete(true);
+            return;
+        }
+
+        setDisplayedText('');
+        setIsComplete(false);
+        
+        let index = 0;
+        const timer = setInterval(() => {
+            if (index < text.length) {
+                setDisplayedText(text.slice(0, index + 1));
+                index++;
+            } else {
+                setIsComplete(true);
+                clearInterval(timer);
+            }
+        }, speed);
+
+        return () => clearInterval(timer);
+    }, [text, speed]);
+
+    return { displayedText, isComplete };
+};
+
+function Message({ role, content, sources, onOpenContent, isVisible = true, isCurrent = false }) {
+    const [skipAnimation, setSkipAnimation] = useState(false);
+    const { displayedText, isComplete } = useTypingEffect(
+        role === 'assistant' && !skipAnimation && isCurrent ? content : content,
+        30
+    );
+
+    const textToShow = role === 'assistant' && !skipAnimation && isCurrent ? displayedText : content;
+
     const formatText = (text) => {
         if (!text) return '';
         return text
@@ -22,20 +62,26 @@ function Message({ role, content, sources, onOpenContent }) {
         }
     };
 
+    const handleMessageClick = () => {
+        if (role === 'assistant' && !isComplete && isCurrent) {
+            setSkipAnimation(true);
+        }
+    };
+
     return (
-        <div className={`message ${role}`}>
-            <div className="message-avatar">
-                {role === 'assistant' ? (
-                    <img src="./edu.png" alt="EDO AI" />
-                ) : (
-                    <div className="user-avatar">U</div>
-                )}
-            </div>
-            <div className="message-bubble">
-                <div className="message-content">
-                    <div dangerouslySetInnerHTML={{ __html: formatText(content) }} />
+        <div className={`message ${role} ${!isVisible ? 'message-hidden' : ''} ${isCurrent ? 'message-current' : ''}`}>
+            <div className="message-content-wrapper">
+                <div 
+                    className="message-content" 
+                    onClick={handleMessageClick}
+                    style={{ cursor: role === 'assistant' && !isComplete && isCurrent ? 'pointer' : 'default' }}
+                >
+                    <div dangerouslySetInnerHTML={{ __html: formatText(textToShow) }} />
+                    {role === 'assistant' && !isComplete && isCurrent && (
+                        <span className="typing-cursor">|</span>
+                    )}
                 </div>
-                {sources && sources.length > 0 && (
+                {sources && sources.length > 0 && isComplete && (
                     <div className="message-sources">
                         <div className="sources-header">
                             <span className="sources-icon">📚</span>

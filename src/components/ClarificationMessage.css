@@ -1,37 +1,45 @@
 .clarification {
-    background: var(--bg-tertiary);
-    border-left: 4px solid var(--accent-warning);
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 2px solid var(--accent-warning);
     padding: 16px;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     margin-top: 8px;
-    border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .clarification-title {
-    font-weight: 600;
-    margin-bottom: 12px;
+    font-weight: 500;
+    margin-bottom: 16px;
     color: var(--accent-warning);
+    font-size: 15px;
 }
 
 .clarification-options {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .clarification-option {
-    background: var(--bg-secondary);
-    padding: 12px;
-    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all var(--transition-fast);
-    border: 2px solid var(--border-secondary);
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     color: var(--text-primary);
+    font-size: 14px;
 }
 
 .clarification-option:hover {
     border-color: var(--accent-warning);
-    background: var(--bg-elevated);
+    background: rgba(245, 158, 11, 0.08);
     transform: translateX(4px);
-    box-shadow: var(--shadow-sm);
+}
+
+.sources {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 13px;
+    color: var(--text-secondary);
 }
