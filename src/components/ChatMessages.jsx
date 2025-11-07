@@ -1,11 +1,11 @@
-// ChatMessages.jsx
 import React, { useEffect, useRef } from 'react';
 import Message from './Message.jsx';
 import ClarificationMessage from './ClarificationMessage.jsx';
+import MaterialListMessage from './MaterialListMessage.jsx';
 import TypingIndicator from './TypingIndicator.jsx';
 import './ChatMessages.css';
 
-function ChatMessages({ messages, isLoading, onSelectOption, onOpenContent }) {
+function ChatMessages({ messages, isLoading, onSelectOption, onOpenContent, materiaisPendentes }) {
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -27,6 +27,14 @@ function ChatMessages({ messages, isLoading, onSelectOption, onOpenContent }) {
                             key={index} 
                             data={message.data}
                             onSelectOption={onSelectOption}
+                        />
+                    );
+                } else if (message.data?.tipo === 'lista_materiais') {
+                    return (
+                        <MaterialListMessage
+                            key={index}
+                            data={message.data}
+                            onSelectMaterial={onSelectOption}
                         />
                     );
                 } else {
