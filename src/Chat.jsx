@@ -7,57 +7,35 @@ import './Chat.css';
 
 const API_URL = 'https://adaptaedu-api.vercel.app/api';
 
+const GREETING_MESSAGE = {
+    role: 'assistant',
+    data: {
+        resposta: `Olá! 👋 Sou o **Edu**, seu assistente educacional inteligente!\n\nEstou aqui para ajudar você a aprender de forma personalizada e interativa. Posso:\n\n💡 **Responder suas dúvidas** sobre diversos assuntos\n📚 **Fornecer materiais didáticos** relevantes\n🎯 **Adaptar as explicações** ao seu nível de conhecimento\n\nComo posso te ajudar hoje? Pode fazer qualquer pergunta ou me dizer sobre o que você gostaria de aprender!`,
+        tipo: 'resposta'
+    }
+};
+
 function Chat({ onBackToHome }) {
     const [conversationId, setConversationId] = useState(null);
     const [messages, setMessages] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isPrefOpen, setIsPrefOpen] = useState(false);
+    const [isWaitingForClarification, setIsWaitingForClarification] = useState(false);
     const [sidebarContent, setSidebarContent] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [materiaisPendentes, setMateriaisPendentes] = useState(null);
+    const [showGreeting, setShowGreeting] = useState(true);
 
     useEffect(() => {
-        initializeChat();
-    }, []);
+        if (showGreeting) {
+            const timer = setTimeout(() => {
+                setMessages([GREETING_MESSAGE]);
+                setIsLoading(false);
+                setShowGreeting(false);
+            }, 2000);
 
-    const initializeChat = async () => {
-        setIsLoading(true);
-        try {
-            const response = await fetch(`${API_URL}/chat/init`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            const data = await response.json();
-
-            if (data.conversationId) {
-                setConversationId(data.conversationId);
-            }
-
-            if (data.mensagem) {
-                setMessages([{
-                    role: 'assistant',
-                    data: {
-                        resposta: data.mensagem,
-                        tipo: 'resposta'
-                    }
-                }]);
-            }
-        } catch (error) {
-            console.error('Erro ao inicializar chat:', error);
-            setMessages([{
-                role: 'assistant',
-                data: {
-                    resposta: 'Erro ao inicializar conversa. Tente novamente.',
-                    tipo: 'resposta'
-                }
-            }]);
-        } finally {
-            setIsLoading(false);
+            return () => clearTimeout(timer);
         }
-    };
+    }, [showGreeting]);
 
     const handleSendMessage = async (message) => {
         setMessages(prev => [...prev, { role: 'user', content: message }]);
@@ -77,29 +55,24 @@ function Chat({ onBackToHome }) {
 
             const data = await response.json();
 
-            console.log(data);
+            console.log(data)
 
             if (data.conversationId) {
                 setConversationId(data.conversationId);
             }
 
-            // Adiciona resposta às mensagens
             setMessages(prev => [...prev, { role: 'assistant', data }]);
 
-            // Trata tipos de resposta
-            if (data.tipo === 'lista_materiais' && data.materiais_pendentes) {
-                setMateriaisPendentes(data.materiais_pendentes);
+            if (data.tipo === 'clarificacao') {
+                setIsWaitingForClarification(true);
             } else {
-                setMateriaisPendentes(null);
+                setIsWaitingForClarification(false);
             }
         } catch (error) {
             console.error('Erro ao enviar mensagem:', error);
             setMessages(prev => [...prev, {
                 role: 'assistant',
-                data: {
-                    resposta: 'Erro ao se comunicar com o servidor.',
-                    tipo: 'resposta'
-                }
+                content: 'Erro ao se comunicar com o servidor.'
             }]);
         } finally {
             setIsLoading(false);
@@ -109,10 +82,11 @@ function Chat({ onBackToHome }) {
     const handleNewChat = () => {
         setConversationId(null);
         setMessages([]);
-        setMateriaisPendentes(null);
+        setIsWaitingForClarification(false);
         setIsSidebarOpen(false);
         setSidebarContent(null);
-        initializeChat();
+        setIsLoading(true);
+        setShowGreeting(true);
     };
 
     const handleOpenContent = (content) => {
@@ -149,49 +123,54 @@ function Chat({ onBackToHome }) {
 
     return (
         <>
-            <div className="chat-container">
-                <div className="chat-header">
-                    <button className="btn-new-chat" onClick={onBackToHome}>
-                        <span className="btn-icon">←</span>
-                        <span className="btn-text">Início</span>
-                    </button>
+<div className="chat-container">
+            <div className="chat-header">
 
-                    <button className="btn-new-chat" onClick={handleNewChat}>
-                        <span className="btn-icon">+</span>
-                        <span className="btn-text">Nova Conversa</span>
-                    </button>
-                </div>
+                <button className="btn-new-chat" onClick={onBackToHome}>
+                    <span className="btn-icon">←</span>
+                    <span className="btn-text">Início</span>
 
-                <div className="chat-wrapper">
-                    <div className="chat-content">
-                        <ChatMessages
-                            messages={messages}
-                            isLoading={isLoading}
-                            onSelectOption={handleSendMessage}
-                            onOpenContent={handleOpenContent}
-                            materiaisPendentes={materiaisPendentes}
-                        />
-                    </div>
+                </button>
 
-                    <PreferencesPanel
-                        isOpen={isPrefOpen}
-                        onClose={() => setIsPrefOpen(false)}
-                        onSave={handleSavePreferences}
+                <button className="btn-new-chat" onClick={handleNewChat}>
+                    <span className="btn-icon">+</span>
+                    <span className="btn-text">Nova Conversa</span>
+                </button>
+
+            </div>
+
+            <div className="chat-wrapper">
+                <div className="chat-content">
+                    <ChatMessages
+                        messages={messages}
+                        isLoading={isLoading}
+                        onSelectOption={handleSendMessage}
+                        onOpenContent={handleOpenContent}
                     />
+
                 </div>
 
-                <ChatInput
-                    onSendMessage={handleSendMessage}
-                    disabled={isLoading}
+                <PreferencesPanel
+                    isOpen={isPrefOpen}
+                    onClose={() => setIsPrefOpen(false)}
+                    onSave={handleSavePreferences}
                 />
             </div>
+
+            <ChatInput
+                onSendMessage={handleSendMessage}
+                disabled={isLoading}
+            />
+
             
-            <ContentSidebar
+        </div>
+        <ContentSidebar
                 isOpen={isSidebarOpen}
                 content={sidebarContent}
                 onClose={() => setIsSidebarOpen(false)}
             />
         </>
+        
     );
 }
 
