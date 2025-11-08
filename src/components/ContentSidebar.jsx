@@ -1,53 +1,55 @@
+// ContentSidebar.jsx
 import React from 'react';
 import './ContentSidebar.css';
 
 function ContentSidebar({ isOpen, content, onClose }) {
-    if (!isOpen || !content) return null;
+    if (!content) return null;
 
     const renderContent = () => {
-        if (!content) return null;
-
-        switch (content.type) {
+        switch (content.tipo) {
             case 'pdf':
                 return (
-                    <iframe
-                        src={content.url}
-                        title={content.nome}
-                        className="content-iframe"
-                    />
+                    <div className="content-pdf">
+                        <iframe
+                            src={content.conteudo || content.url}
+                            width="100%"
+                            height="100%"
+                            style={{ border: 'none', borderRadius: 'var(--radius-md)' }}
+                            title={content.nome}
+                        />
+                    </div>
                 );
             case 'video':
                 return (
-                    <video
-                        controls
-                        className="content-video"
-                        src={content.url}
-                    >
-                        Seu navegador não suporta o elemento de vídeo.
-                    </video>
-                );
-            case 'text':
-            case 'texto':
-                return (
-                    <iframe
-                        src={content.url}
-                        title={content.nome}
-                        className="content-iframe"
-                    />
-                );
-            case 'json':
-                return (
-                    <div className="content-json">
-                        <pre>{JSON.stringify(content, null, 2)}</pre>
+                    <div className="content-video">
+                        <video controls width="100%">
+                            <source src={content.conteudo || content.url} type="video/mp4" />
+                            Seu navegador não suporta vídeos.
+                        </video>
                     </div>
                 );
+            case 'imagem':
+                return (
+                    <div className="content-image">
+                        <img src={content.conteudo || content.url} alt={content.nome} />
+                    </div>
+                );
+            case 'audio':
+                return (
+                    <div className="content-audio">
+                        <audio controls style={{ width: '100%' }}>
+                            <source src={content.conteudo || content.url} type="audio/mpeg" />
+                            Seu navegador não suporta áudio.
+                        </audio>
+                    </div>
+                );
+            case 'texto':
             default:
                 return (
-                    <div className="content-default">
-                        <p>Tipo de conteúdo não suportado para visualização.</p>
-                        <a href={content.url} target="_blank" rel="noopener noreferrer">
-                            Abrir em nova aba
-                        </a>
+                    <div className="content-text">
+                        <div className="text-content">
+                            {content.conteudo}
+                        </div>
                     </div>
                 );
         }
@@ -55,13 +57,23 @@ function ContentSidebar({ isOpen, content, onClose }) {
 
     return (
         <>
-            <div className="content-sidebar-overlay" onClick={onClose} />
+            <div className={`sidebar-overlay ${isOpen ? 'active' : ''}`} onClick={onClose} />
             <div className={`content-sidebar ${isOpen ? 'open' : ''}`}>
-                <div className="content-sidebar-header">
-                    <h3>{content.nome}</h3>
-                    <button className="btn-close-sidebar" onClick={onClose}>×</button>
+                <div className="sidebar-header">
+                    <div className="sidebar-title">
+                        <span className="sidebar-icon">
+                            {content.tipo === 'pdf' ? '📄' :
+                             content.tipo === 'video' ? '🎥' :
+                             content.tipo === 'imagem' ? '🖼️' :
+                             content.tipo === 'audio' ? '🎵' : '📄'}
+                        </span>
+                        <h3>{content.nome}</h3>
+                    </div>
+                    <button className="btn-close-sidebar" onClick={onClose}>
+                        ✕
+                    </button>
                 </div>
-                <div className="content-sidebar-body">
+                <div className="sidebar-content">
                     {renderContent()}
                 </div>
             </div>

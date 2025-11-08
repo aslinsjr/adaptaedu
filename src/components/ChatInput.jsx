@@ -3,52 +3,70 @@ import './ChatInput.css';
 
 function ChatInput({ onSendMessage, disabled }) {
     const [message, setMessage] = useState('');
+    const [isFocused, setIsFocused] = useState(false);
     const textareaRef = useRef(null);
 
     useEffect(() => {
         if (textareaRef.current) {
             textareaRef.current.style.height = 'auto';
-            textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 150) + 'px';
+            textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 120) + 'px';
         }
     }, [message]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (message.trim() && !disabled) {
-            onSendMessage(message.trim());
+    const handleSubmit = () => {
+        const trimmedMessage = message.trim();
+        if (trimmedMessage && !disabled) {
+            onSendMessage(trimmedMessage);
             setMessage('');
+            if (textareaRef.current) {
+                textareaRef.current.style.height = 'auto';
+            }
         }
     };
 
-    const handleKeyDown = (e) => {
+    const handleKeyPress = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            handleSubmit(e);
+            handleSubmit();
         }
     };
 
     return (
-        <form className="chat-input-container" onSubmit={handleSubmit}>
-            <div className="chat-input-wrapper">
+        <div className={`chat-input-container ${isFocused ? 'focused' : ''}`}>
+            <div className="input-wrapper">
                 <textarea
                     ref={textareaRef}
-                    className="chat-input"
-                    placeholder="Digite sua mensagem..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    onKeyDown={handleKeyDown}
+                    onKeyPress={handleKeyPress}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    placeholder="Digite sua mensagem..."
+                    rows="1"
                     disabled={disabled}
-                    rows={1}
+                    className="message-input"
                 />
-                <button
-                    type="submit"
-                    className="btn-send"
-                    disabled={disabled || !message.trim()}
-                >
-                    <span className="send-icon">➤</span>
-                </button>
+                <div className="input-actions">
+                    {/* <button 
+                        className="btn-attach"
+                        title="Anexar arquivo"
+                        disabled={disabled}
+                    >
+                        📎
+                    </button> */}
+                    <button 
+                        className="btn-send" 
+                        onClick={handleSubmit}
+                        disabled={disabled || !message.trim()}
+                    >
+                        <span className="send-icon">↑</span>
+                    </button>
+                </div>
             </div>
-        </form>
+            <div className="input-hint">
+                Pressione <kbd>Enter</kbd> para enviar, <kbd>Shift + Enter</kbd> para nova linha
+            </div>
+        </div>
     );
 }
 
