@@ -39,9 +39,19 @@ function TypewriterText({ text, speed = 50, onContentChange }) {
 
     const formatText = (text) => {
         if (!text) return '';
-        return text
+
+        // Primeiro, protege as tags HTML existentes
+        let processedText = text
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
+        // Aplica a formatação Markdown
+        processedText = processedText
+            .replace(/\n/g, '<br>')
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+        return processedText;
     };
 
     const handleClick = () => {
@@ -57,14 +67,14 @@ function TypewriterText({ text, speed = 50, onContentChange }) {
     return (
         <div onClick={handleClick} style={{ cursor: isComplete ? 'default' : 'pointer' }}>
             {displayedLines.map((line, index) => (
-                <div 
-                    key={index} 
+                <div
+                    key={index}
                     style={{ opacity: 0.7, marginBottom: line === '' ? '0.5em' : '0' }}
                     dangerouslySetInnerHTML={{ __html: formatText(line) || '<br/>' }}
                 />
             ))}
             {!isComplete && currentLineIndex < lines.length && (
-                <div dangerouslySetInnerHTML={{ 
+                <div dangerouslySetInnerHTML={{
                     __html: formatText(lines[currentLineIndex].substring(0, currentCharIndex)) + '<span style="opacity: 0.5">|</span>'
                 }} />
             )}
@@ -101,18 +111,18 @@ function Message({ role, content, sources, fontes, onOpenContent, onScrollNeeded
     // Agrupar fontes por arquivo
     const groupedFontes = () => {
         if (!fontes || fontes.length === 0) return [];
-        
+
         const grupos = {};
-        
+
         fontes.forEach((fonte, index) => {
             const referencia = fonte.metadata?.referencia_completa || fonte.metadata?.fonte || 'Fonte desconhecida';
-            
+
             if (!grupos[referencia]) {
                 grupos[referencia] = [];
             }
             grupos[referencia].push(index + 1);
         });
-        
+
         return Object.entries(grupos).map(([arquivo, indices]) => ({
             arquivo,
             fontes: indices
@@ -129,9 +139,9 @@ function Message({ role, content, sources, fontes, onOpenContent, onScrollNeeded
                         <div className="user-avatar">U</div>
                     )}
                 </div>
-                
+
                 {role === 'assistant' && sources && sources.length > 0 && (
-                    <button 
+                    <button
                         className="sources-toggle"
                         onClick={toggleSources}
                         aria-label={isSourcesExpanded ? "Ocultar materiais" : "Mostrar materiais"}
@@ -144,58 +154,61 @@ function Message({ role, content, sources, fontes, onOpenContent, onScrollNeeded
             <div className="message-bubble">
                 <div className="message-content">
                     {role === 'assistant' ? (
-                        <TypewriterText 
-                            text={content} 
-                            speed={30} 
+                        <TypewriterText
+                            text={content}
+                            speed={30}
                             onContentChange={onScrollNeeded}
                         />
                     ) : (
                         <div dangerouslySetInnerHTML={{ __html: formatText(content) }} />
                     )}
                 </div>
-                
+
                 {role === 'assistant' && sources && sources.length > 0 && isSourcesExpanded && (
                     <div className="message-sources">
                         <div className="sources-header">
                             <span className="sources-icon">📚</span>
                             <span className="sources-title">Materiais disponíveis</span>
                         </div>
-                        
-                        {fontes && fontes.length > 0 && (
-                            <div className="sources-references">
-                                <div className="references-title">Referências citadas:</div>
-                                {groupedFontes().map((grupo, idx) => (
-                                    <div key={idx} className="reference-item">
-                                        <span className="reference-sources">
-                                            {grupo.fontes.length === 1 
-                                                ? `Fonte ${grupo.fontes[0]}` 
-                                                : `Fontes ${grupo.fontes.join(', ')}`}
+
+                        <div className="inner-sources">
+                            {fontes && fontes.length > 0 && (
+                                <div className="sources-references">
+                                    <div className="references-title">Referências citadas:</div>
+                                    {groupedFontes().map((grupo, idx) => (
+                                        <div key={idx} className="reference-item">
+                                            <span className="reference-sources">
+                                                {grupo.fontes.length === 1
+                                                    ? `Fonte ${grupo.fontes[0]}`
+                                                    : `Fontes ${grupo.fontes.join(', ')}`}
+                                            </span>
+                                            <span className="reference-file">({grupo.arquivo})</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            <div className="sources-list">
+                                {sources.map((doc, index) => (
+                                    <button
+                                        key={index}
+                                        className={`source-item source-${doc.tipo || 'texto'}`}
+                                        onClick={() => handleContentClick(doc)}
+                                        title={`Clique para abrir: ${doc.nome}`}
+                                    >
+                                        <span className="source-icon">
+                                            {doc.tipo === 'pdf' ? '📄' :
+                                                doc.tipo === 'video' ? '🎥' :
+                                                    doc.tipo === 'imagem' ? '🖼️' :
+                                                        doc.tipo === 'audio' ? '🎵' : '📄'}
                                         </span>
-                                        <span className="reference-file">({grupo.arquivo})</span>
-                                    </div>
+                                        <span className="source-name">{doc.nome}</span>
+                                        <span className="source-arrow">→</span>
+                                    </button>
                                 ))}
                             </div>
-                        )}
-                        
-                        <div className="sources-list">
-                            {sources.map((doc, index) => (
-                                <button
-                                    key={index}
-                                    className={`source-item source-${doc.tipo || 'texto'}`}
-                                    onClick={() => handleContentClick(doc)}
-                                    title={`Clique para abrir: ${doc.nome}`}
-                                >
-                                    <span className="source-icon">
-                                        {doc.tipo === 'pdf' ? '📄' :
-                                         doc.tipo === 'video' ? '🎥' :
-                                         doc.tipo === 'imagem' ? '🖼️' :
-                                         doc.tipo === 'audio' ? '🎵' : '📄'}
-                                    </span>
-                                    <span className="source-name">{doc.nome}</span>
-                                    <span className="source-arrow">→</span>
-                                </button>
-                            ))}
                         </div>
+
                     </div>
                 )}
             </div>

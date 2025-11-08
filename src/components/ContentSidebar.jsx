@@ -43,6 +43,28 @@ function ContentSidebar({ isOpen, content, onClose }) {
                         </audio>
                     </div>
                 );
+            case 'json':
+                return (
+                    <div className="content-json">
+                        <div className="json-url-display">
+                            <h4>Arquivo JSON</h4>
+                            <div className="url-container">
+                                <span className="url-label">URL:</span>
+                                <a 
+                                    href={content.conteudo || content.url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="json-url"
+                                >
+                                    {content.conteudo || content.url}
+                                </a>
+                            </div>
+                            <p className="json-note">
+                                Clique no link acima para visualizar o conteúdo JSON
+                            </p>
+                        </div>
+                    </div>
+                );
             case 'texto':
             default:
                 return (
@@ -65,7 +87,8 @@ function ContentSidebar({ isOpen, content, onClose }) {
                             {content.tipo === 'pdf' ? '📄' :
                              content.tipo === 'video' ? '🎥' :
                              content.tipo === 'imagem' ? '🖼️' :
-                             content.tipo === 'audio' ? '🎵' : '📄'}
+                             content.tipo === 'audio' ? '🎵' :
+                             content.tipo === 'json' ? '📊' : '📄'}
                         </span>
                         <h3>{content.nome}</h3>
                     </div>

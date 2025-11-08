@@ -77,7 +77,6 @@
     font-size: 15px;
     box-shadow: var(--shadow-sm);
     transition: all var(--transition-normal);
-    max-width: 65ch;
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: pre-wrap;
@@ -112,6 +111,11 @@
     padding: 12px;
     animation: slideDown 0.3s ease;
     margin-top: 8px;
+}
+
+.inner-sources {
+    display: flex;
+    gap: 1rem;
 }
 
 @keyframes slideDown {
