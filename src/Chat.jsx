@@ -7,13 +7,21 @@ import './Chat.css';
 
 const API_URL = 'https://adaptaedu-api.vercel.app/api';
 
-const GREETING_MESSAGE = {
+const ASK_NAME_MESSAGE = {
     role: 'assistant',
     data: {
-        resposta: `Olá! 👋 Sou o **Edu**, seu assistente educacional inteligente!\n\nEstou aqui para ajudar você a aprender de forma personalizada e interativa. Posso:\n\n💡 **Responder suas dúvidas** sobre diversos assuntos\n📚 **Fornecer materiais didáticos** relevantes\n🎯 **Adaptar as explicações** ao seu nível de conhecimento\n\nComo posso te ajudar hoje? Pode fazer qualquer pergunta ou me dizer sobre o que você gostaria de aprender!`,
+        resposta: `Olá! 👋 Como você gostaria de ser chamado?`,
         tipo: 'resposta'
     }
 };
+
+const GREETING_MESSAGE = (nome) => ({
+    role: 'assistant',
+    data: {
+        resposta: `Prazer em conhecer você, ${nome}! 🎉\n\nSou o **Edu**, seu assistente educacional inteligente!\nEstou aqui para ajudar você a aprender de forma personalizada e interativa. \n\nComo posso te ajudar hoje?`,
+        tipo: 'resposta'
+    }
+});
 
 function Chat({ onBackToHome }) {
     const [conversationId, setConversationId] = useState(null);
@@ -24,11 +32,13 @@ function Chat({ onBackToHome }) {
     const [sidebarContent, setSidebarContent] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [showGreeting, setShowGreeting] = useState(true);
+    const [userName, setUserName] = useState(null);
+    const [waitingForName, setWaitingForName] = useState(true);
 
     useEffect(() => {
         if (showGreeting) {
             const timer = setTimeout(() => {
-                setMessages([GREETING_MESSAGE]);
+                setMessages([ASK_NAME_MESSAGE]);
                 setIsLoading(false);
                 setShowGreeting(false);
             }, 2000);
@@ -39,6 +49,18 @@ function Chat({ onBackToHome }) {
 
     const handleSendMessage = async (message) => {
         setMessages(prev => [...prev, { role: 'user', content: message }]);
+        
+        if (waitingForName) {
+            setUserName(message);
+            setWaitingForName(false);
+            setIsLoading(true);
+            setTimeout(() => {
+                setMessages(prev => [...prev, GREETING_MESSAGE(message)]);
+                setIsLoading(false);
+            }, 500);
+            return;
+        }
+        
         setIsLoading(true);
 
         try {
@@ -87,6 +109,8 @@ function Chat({ onBackToHome }) {
         setSidebarContent(null);
         setIsLoading(true);
         setShowGreeting(true);
+        setUserName(null);
+        setWaitingForName(true);
     };
 
     const handleOpenContent = (content) => {

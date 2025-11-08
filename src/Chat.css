@@ -87,7 +87,6 @@
     flex: 1;
     display: flex;
     position: relative;
-    overflow-y: scroll;
     min-height: 50dvh;
     border-radius: var(--radius-2xl);
 }

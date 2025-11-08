@@ -1,8 +1,80 @@
-// Message.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Message.css';
 
-function Message({ role, content, sources, onOpenContent }) {
+function TypewriterText({ text, speed = 50, onContentChange }) {
+    const [displayedLines, setDisplayedLines] = useState([]);
+    const [currentLineIndex, setCurrentLineIndex] = useState(0);
+    const [currentCharIndex, setCurrentCharIndex] = useState(0);
+    const [isComplete, setIsComplete] = useState(false);
+
+    const lines = text.split('\n');
+
+    useEffect(() => {
+        if (isComplete) return;
+
+        if (currentLineIndex >= lines.length) {
+            setIsComplete(true);
+            return;
+        }
+
+        const currentLine = lines[currentLineIndex];
+
+        if (currentCharIndex < currentLine.length) {
+            const timer = setTimeout(() => {
+                setCurrentCharIndex(prev => prev + 1);
+            }, speed);
+            return () => clearTimeout(timer);
+        } else {
+            setDisplayedLines(prev => [...prev, currentLine]);
+            setCurrentLineIndex(prev => prev + 1);
+            setCurrentCharIndex(0);
+        }
+    }, [currentCharIndex, currentLineIndex, lines, speed, isComplete]);
+
+    // Scroll automático durante digitação
+    useEffect(() => {
+        if (onContentChange && !isComplete) {
+            onContentChange();
+        }
+    }, [currentCharIndex, currentLineIndex, displayedLines, onContentChange, isComplete]);
+
+    const formatText = (text) => {
+        if (!text) return '';
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>');
+    };
+
+    const handleClick = () => {
+        if (!isComplete) {
+            setDisplayedLines(lines);
+            setIsComplete(true);
+            // Trigger final scroll when completed
+            if (onContentChange) {
+                onContentChange();
+            }
+        }
+    };
+
+    return (
+        <div onClick={handleClick} style={{ cursor: isComplete ? 'default' : 'pointer' }}>
+            {displayedLines.map((line, index) => (
+                <div 
+                    key={index} 
+                    style={{ opacity: 0.7, marginBottom: line === '' ? '0.5em' : '0' }}
+                    dangerouslySetInnerHTML={{ __html: formatText(line) || '<br/>' }}
+                />
+            ))}
+            {!isComplete && currentLineIndex < lines.length && (
+                <div dangerouslySetInnerHTML={{ 
+                    __html: formatText(lines[currentLineIndex].substring(0, currentCharIndex)) + '<span style="opacity: 0.5">|</span>'
+                }} />
+            )}
+        </div>
+    );
+}
+
+function Message({ role, content, sources, onOpenContent, onScrollNeeded }) {
     const formatText = (text) => {
         if (!text) return '';
         return text
@@ -33,7 +105,15 @@ function Message({ role, content, sources, onOpenContent }) {
             </div>
             <div className="message-bubble">
                 <div className="message-content">
-                    <div dangerouslySetInnerHTML={{ __html: formatText(content) }} />
+                    {role === 'assistant' ? (
+                        <TypewriterText 
+                            text={content} 
+                            speed={30} 
+                            onContentChange={onScrollNeeded}
+                        />
+                    ) : (
+                        <div dangerouslySetInnerHTML={{ __html: formatText(content) }} />
+                    )}
                 </div>
                 {sources && sources.length > 0 && (
                     <div className="message-sources">

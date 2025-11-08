@@ -1,5 +1,5 @@
 // ChatMessages.jsx
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import Message from './Message.jsx';
 import ClarificationMessage from './ClarificationMessage.jsx';
 import TypingIndicator from './TypingIndicator.jsx';
@@ -8,13 +8,13 @@ import './ChatMessages.css';
 function ChatMessages({ messages, isLoading, onSelectOption, onOpenContent }) {
     const messagesEndRef = useRef(null);
 
-    const scrollToBottom = () => {
+    const scrollToBottom = useCallback(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
+    }, []);
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages, isLoading]);
+    }, [messages, isLoading, scrollToBottom]);
 
     return (
         <div className="chat-messages">
@@ -37,6 +37,7 @@ function ChatMessages({ messages, isLoading, onSelectOption, onOpenContent }) {
                             content={message.data?.resposta || message.content}
                             sources={message.data?.documentos_usados}
                             onOpenContent={onOpenContent}
+                            onScrollNeeded={scrollToBottom}
                         />
                     );
                 }
