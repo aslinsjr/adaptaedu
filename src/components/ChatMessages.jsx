@@ -5,7 +5,7 @@ import ClarificationMessage from './ClarificationMessage.jsx';
 import TypingIndicator from './TypingIndicator.jsx';
 import './ChatMessages.css';
 
-function ChatMessages({ messages, isLoading, onSelectOption, onOpenContent }) {
+function ChatMessages({ messages, isLoading, onSelectOption, onOpenContent , userName}) {
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = useCallback(() => {
@@ -38,6 +38,7 @@ function ChatMessages({ messages, isLoading, onSelectOption, onOpenContent }) {
             key={index}
             role={msg.role}
             content={msg.content}
+            userName={userName}
             onScrollNeeded={scrollToBottom}
         />
     );

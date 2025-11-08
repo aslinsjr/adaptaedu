@@ -69,12 +69,15 @@ function TypewriterText({ text, speed = 50, onContentChange }) {
             {displayedLines.map((line, index) => (
                 <div
                     key={index}
-                    style={{ opacity: 0.7, marginBottom: line === '' ? '0.5em' : '0' }}
+                    style={{ 
+                        opacity: index === displayedLines.length - 1 ? 1 : 0.7,
+                        marginBottom: line === '' ? '0.5em' : '0'
+                    }}
                     dangerouslySetInnerHTML={{ __html: formatText(line) || '<br/>' }}
                 />
             ))}
             {!isComplete && currentLineIndex < lines.length && (
-                <div dangerouslySetInnerHTML={{
+                <div style={{ opacity: 1 }} dangerouslySetInnerHTML={{
                     __html: formatText(lines[currentLineIndex].substring(0, currentCharIndex)) + '<span style="opacity: 0.5">|</span>'
                 }} />
             )}
@@ -82,7 +85,7 @@ function TypewriterText({ text, speed = 50, onContentChange }) {
     );
 }
 
-function Message({ role, content, sources, fontes, onOpenContent, onScrollNeeded }) {
+function Message({ role, content, sources, fontes, onOpenContent, onScrollNeeded, userName }) {
     const [isSourcesExpanded, setIsSourcesExpanded] = useState(false);
 
     const formatText = (text) => {
@@ -132,13 +135,13 @@ function Message({ role, content, sources, fontes, onOpenContent, onScrollNeeded
     return (
         <div className={`message ${role}`}>
             <div className="message-left">
-                <div className="message-avatar">
-                    {role === 'assistant' ? (
+                {role === 'assistant' ? (
+                    <div className="message-avatar">
                         <img src="./edu.png" alt="EDO AI" />
-                    ) : (
-                        <div className="user-avatar">U</div>
-                    )}
-                </div>
+                    </div>
+                ) : (
+                    <div className="user-avatar">{userName}</div>
+                )}
 
                 {role === 'assistant' && sources && sources.length > 0 && (
                     <button
@@ -208,7 +211,6 @@ function Message({ role, content, sources, fontes, onOpenContent, onScrollNeeded
                                 ))}
                             </div>
                         </div>
-
                     </div>
                 )}
             </div>

@@ -170,6 +170,7 @@ function Chat({ onBackToHome }) {
                         isLoading={isLoading}
                         onSelectOption={handleSendMessage}
                         onOpenContent={handleOpenContent}
+                        userName={userName}
                     />
 
                 </div>

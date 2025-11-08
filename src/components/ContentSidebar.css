@@ -250,6 +250,7 @@
     .content-sidebar {
         width: 100%;
         right: -100%;
+        flex-direction: column;
     }
     
     .sidebar-title h3 {
