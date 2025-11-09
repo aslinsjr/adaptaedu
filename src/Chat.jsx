@@ -26,7 +26,6 @@ function Chat({ onBackToHome }) {
     const [conversationId, setConversationId] = useState(null);
     const [messages, setMessages] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [isWaitingForClarification, setIsWaitingForClarification] = useState(false);
     const [sidebarContent, setSidebarContent] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [showGreeting, setShowGreeting] = useState(true);
@@ -47,7 +46,7 @@ function Chat({ onBackToHome }) {
 
     const handleSendMessage = async (message) => {
         setMessages(prev => [...prev, { role: 'user', content: message }]);
-        
+
         if (waitingForName) {
             setUserName(message);
             setWaitingForName(false);
@@ -58,7 +57,7 @@ function Chat({ onBackToHome }) {
             }, 500);
             return;
         }
-        
+
         setIsLoading(true);
 
         try {
@@ -116,79 +115,52 @@ function Chat({ onBackToHome }) {
         setIsSidebarOpen(true);
     };
 
-    const handleSavePreferences = async (preferences) => {
-        if (!conversationId) {
-            alert('Inicie uma conversa primeiro');
-            return;
-        }
-
-        try {
-            const response = await fetch(`${API_URL}/conversas/${conversationId}/preferencias`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ preferencias: preferences })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                alert('Preferências salvas!');
-                setIsPrefOpen(false);
-            }
-        } catch (error) {
-            console.error('Erro ao salvar preferências:', error);
-            alert('Erro ao salvar preferências');
-        }
-    };
-
     return (
         <>
-<div className="chat-container">
-            <div className="chat-header">
+            <div className="chat-container">
+                <div className="chat-header">
 
-                <button className="btn-new-chat" onClick={onBackToHome}>
-                    <span className="btn-icon">←</span>
-                    <span className="btn-text">Início</span>
+                    <button className="btn-new-chat" onClick={onBackToHome}>
+                        <span className="btn-icon">←</span>
+                        <span className="btn-text">Início</span>
 
-                </button>
+                    </button>
 
-                <button className="btn-new-chat" onClick={handleNewChat}>
-                    <span className="btn-icon">+</span>
-                    <span className="btn-text">Nova Conversa</span>
-                </button>
-
-            </div>
-
-            <div className="chat-wrapper">
-                <div className="chat-content">
-                    <ChatMessages
-                        messages={messages}
-                        isLoading={isLoading}
-                        onSelectOption={handleSendMessage}
-                        onOpenContent={handleOpenContent}
-                        userName={userName}
-                    />
+                    <button className="btn-new-chat" onClick={handleNewChat}>
+                        <span className="btn-icon">+</span>
+                        <span className="btn-text">Nova Conversa</span>
+                    </button>
 
                 </div>
 
+                <div className="chat-wrapper">
+                    <div className="chat-content">
+                        <ChatMessages
+                            messages={messages}
+                            isLoading={isLoading}
+                            onSelectOption={handleSendMessage}
+                            onOpenContent={handleOpenContent}
+                            userName={userName}
+                        />
+
+                    </div>
+
+                </div>
+
+                <ChatInput
+                    onSendMessage={handleSendMessage}
+                    disabled={isLoading}
+                />
+
+
             </div>
-
-            <ChatInput
-                onSendMessage={handleSendMessage}
-                disabled={isLoading}
-            />
-
-            
-        </div>
-        <ContentSidebar
+            <ContentSidebar
                 isOpen={isSidebarOpen}
                 content={sidebarContent}
                 onClose={() => setIsSidebarOpen(false)}
             />
         </>
-        
+
     );
 }
 
