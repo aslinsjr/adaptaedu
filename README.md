@@ -1,16 +1,83 @@
-# React + Vite
+# AdaptaEdu - Assistente Educacional Inteligente
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Plataforma de chat educacional alimentada por inteligência artificial e sistema RAG próprio, para aprendizado personalizado e interativo.
 
-Currently, two official plugins are available:
+## 📸 Preview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![AdaptaEdu Interface](./public/screen-home.png)
 
-## React Compiler
+## 🌐 Demo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+🔗 **[Acesse a aplicação](https://adaptaedu.vercel.app/)**
 
-## Expanding the ESLint configuration
+## ✨ Funcionalidades
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 💬 **Chat Interativo**: Conversação em tempo real com assistente IA educacional
+- 📚 **Materiais Didáticos**: Acesso a PDFs, vídeos, imagens e áudios
+- 🎯 **Respostas Personalizadas**: Sistema de referências e fontes citadas
+- ⚡ **Efeito Typewriter**: Animação de digitação nas respostas
+- 📱 **Interface Responsiva**: Design adaptável para mobile e desktop
+- 🌙 **Tema Dark**: Interface moderna com gradientes e glassmorphism
+
+## 🛠️ Tecnologias
+
+- **React** - Biblioteca JavaScript para UI
+- **Vite** - Build tool e dev server
+- **CSS Moderno** - Variables, animations, backdrop-filter
+- **REST API** - Integração com backend Node.js
+
+## 🚀 Instalação
+
+```bash
+# Clone o repositório
+git clone [seu-repositorio]
+
+# Entre no diretório
+cd adaptaedu
+
+# Instale as dependências
+npm install
+
+# Execute em modo de desenvolvimento
+npm run dev
+
+# Build para produção
+npm run build
+```
+
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── components/
+│   ├── ChatInput.jsx         # Input de mensagens
+│   ├── ChatMessages.jsx       # Lista de mensagens
+│   ├── Message.jsx            # Componente de mensagem
+│   ├── ContentSidebar.jsx     # Sidebar para visualização de conteúdo
+│   └── TypingIndicator.jsx    # Indicador de digitação
+├── Home.jsx                   # Página inicial
+├── Chat.jsx                   # Página de chat
+└── App.jsx                    # Componente principal
+```
+
+## 🎨 Características de Design
+
+- Gradientes dinâmicos e animações suaves
+- Sistema de cores baseado em CSS Variables
+- Efeitos glassmorphism e backdrop blur
+- Transições e animações personalizadas
+- Scrollbars customizadas
+
+## 📝 API
+
+Integração com backend em:
+```
+https://adaptaedu-api.vercel.app/api
+```
+
+Endpoints principais:
+- `POST /chat` - Enviar mensagens e receber respostas
+
+
+
+Desenvolvido por Alexandre Lins
