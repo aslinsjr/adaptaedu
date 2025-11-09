@@ -26,24 +26,6 @@ Plataforma de chat educacional alimentada por inteligência artificial e sistema
 - **CSS Moderno** - Variables, animations, backdrop-filter
 - **REST API** - Integração com backend Node.js
 
-## 🚀 Instalação
-
-```bash
-# Clone o repositório
-git clone [seu-repositorio]
-
-# Entre no diretório
-cd adaptaedu
-
-# Instale as dependências
-npm install
-
-# Execute em modo de desenvolvimento
-npm run dev
-
-# Build para produção
-npm run build
-```
 
 ## 📁 Estrutura do Projeto
 
