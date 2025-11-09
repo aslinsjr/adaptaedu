@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ChatMessages from './components/ChatMessages.jsx';
 import ChatInput from './components/ChatInput.jsx';
-import PreferencesPanel from './components/PreferencesPanel.jsx';
 import ContentSidebar from './components/ContentSidebar.jsx';
 import './Chat.css';
 
@@ -27,7 +26,6 @@ function Chat({ onBackToHome }) {
     const [conversationId, setConversationId] = useState(null);
     const [messages, setMessages] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [isPrefOpen, setIsPrefOpen] = useState(false);
     const [isWaitingForClarification, setIsWaitingForClarification] = useState(false);
     const [sidebarContent, setSidebarContent] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -175,11 +173,6 @@ function Chat({ onBackToHome }) {
 
                 </div>
 
-                <PreferencesPanel
-                    isOpen={isPrefOpen}
-                    onClose={() => setIsPrefOpen(false)}
-                    onSave={handleSavePreferences}
-                />
             </div>
 
             <ChatInput

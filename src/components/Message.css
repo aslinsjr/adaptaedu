@@ -394,6 +394,10 @@
         padding: 0.5rem;
     }
 
+    .inner-sources {
+        flex-direction: column;
+    }
+
     .message-avatar {
         width: 1.5rem;
         height: 1.5rem;

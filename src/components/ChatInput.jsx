@@ -38,7 +38,7 @@ function ChatInput({ onSendMessage, disabled }) {
                     ref={textareaRef}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={handleKeyPress}
+                    onKeyDown={handleKeyPress}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                     placeholder="Digite sua mensagem..."
@@ -47,13 +47,6 @@ function ChatInput({ onSendMessage, disabled }) {
                     className="message-input"
                 />
                 <div className="input-actions">
-                    {/* <button 
-                        className="btn-attach"
-                        title="Anexar arquivo"
-                        disabled={disabled}
-                    >
-                        📎
-                    </button> */}
                     <button 
                         className="btn-send" 
                         onClick={handleSubmit}
