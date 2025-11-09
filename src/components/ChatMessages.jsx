@@ -1,7 +1,6 @@
 // ChatMessages.jsx
 import React, { useEffect, useRef, useCallback } from 'react';
 import Message from './Message.jsx';
-import ClarificationMessage from './ClarificationMessage.jsx';
 import TypingIndicator from './TypingIndicator.jsx';
 import './ChatMessages.css';
 
@@ -25,8 +24,8 @@ function ChatMessages({ messages, isLoading, onSelectOption, onOpenContent , use
                 key={index}
                 role={msg.role}
                 content={msg.data.resposta}
-                sources={msg.data.documentos_usados} // Documentos para download
-                fontes={msg.data.fontes} // Fontes citadas no texto (NOVO)
+                sources={msg.data.documentos_usados}
+                fontes={msg.data.fontes} 
                 onOpenContent={onOpenContent}
                 onScrollNeeded={scrollToBottom}
             />

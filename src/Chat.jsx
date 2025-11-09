@@ -26,7 +26,6 @@ function Chat({ onBackToHome }) {
     const [conversationId, setConversationId] = useState(null);
     const [messages, setMessages] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [isWaitingForClarification, setIsWaitingForClarification] = useState(false);
     const [sidebarContent, setSidebarContent] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [showGreeting, setShowGreeting] = useState(true);
@@ -83,11 +82,6 @@ function Chat({ onBackToHome }) {
 
             setMessages(prev => [...prev, { role: 'assistant', data }]);
 
-            if (data.tipo === 'clarificacao') {
-                setIsWaitingForClarification(true);
-            } else {
-                setIsWaitingForClarification(false);
-            }
         } catch (error) {
             console.error('Erro ao enviar mensagem:', error);
             setMessages(prev => [...prev, {
@@ -102,7 +96,6 @@ function Chat({ onBackToHome }) {
     const handleNewChat = () => {
         setConversationId(null);
         setMessages([]);
-        setIsWaitingForClarification(false);
         setIsSidebarOpen(false);
         setSidebarContent(null);
         setIsLoading(true);
