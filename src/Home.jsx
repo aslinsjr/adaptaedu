@@ -1,5 +1,6 @@
 import React from 'react';
 import './Home.css';
+import AnalyticsTracker from './AnalyticsTracker.jsx';
 
 function Home({ onStartChat }) {
     return (
@@ -43,10 +44,10 @@ function Home({ onStartChat }) {
                     </button>
                 </div>
 
-                {/* 
-                <div className="home-footer">
-                    <p>Desenvolvido com tecnologia de ponta para potencializar seu aprendizado</p>
-                </div> */}
+               <AnalyticsTracker 
+                    trackingId="TA-pe6zanxv4rd"
+                    apiEndpoint="https://api-analytics-pearl.vercel.app/api/collect" 
+                />
             </div>
         </div>
     );
